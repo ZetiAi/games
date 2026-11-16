@@ -10,6 +10,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+export BUILDX_CONFIG="${BUILDX_CONFIG:-$PWD/.docker-buildx}"
+
 PLAYWRIGHT_VERSION="$(sed -n 's/.*"@playwright\/test": *"\([0-9][0-9.]*\)".*/\1/p' package.json)"
 if [ -z "$PLAYWRIGHT_VERSION" ]; then
 	echo "package.json must pin @playwright/test to an exact version (it selects the browser image)" >&2

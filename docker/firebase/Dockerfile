@@ -15,7 +15,7 @@ RUN apt-get update \
 
 # Pinned so the environment is repeatable; bump deliberately.
 ARG FIREBASE_TOOLS_VERSION=15.34.2
-RUN bun install --cwd /opt/firebase "firebase-tools@${FIREBASE_TOOLS_VERSION}"
+RUN mkdir -p /opt/firebase && bun install --cwd /opt/firebase "firebase-tools@${FIREBASE_TOOLS_VERSION}"
 ENV PATH=/opt/firebase/node_modules/.bin:$PATH
 
 # Keep players (guests in particular) signed in across a restart of the
