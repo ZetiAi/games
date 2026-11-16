@@ -1,0 +1,79 @@
+{
+	"home": {
+		"title": "AI"
+	},
+	"map": {
+		"when": "When"
+	},
+	"portal": {
+		"soon": "Coming soon"
+	},
+	"pages": {
+		"auth-pages": {
+			"email": "Friend's e-mail or guest ID",
+			"login": {
+				"modal": {
+					"buttonCancel": "Cancel"
+				}
+			}
+		},
+		"games": {
+			"explore": "Explore",
+			"games": "Games",
+			"invitationslbl": "Invites",
+			"sign-in": "Sign in or continue as a guest to see your games",
+			"no-invitations": "No invitations yet",
+			"accept": "Accept",
+			"decline": "Decline",
+			"active_games": {
+				"see_game": "See game"
+			},
+			"invitations": {
+				"invitation_msg_1": "invited you to a",
+				"invitation_msg_2": "match"
+			},
+			"game_menu": {
+				"invite_friend": "Invite a friend",
+				"vs_pc": "Play vs computer",
+				"random_moves": "Play vs random moves",
+				"send_invitation_msg": "Send invitation",
+				"login_first_alert": "Sign in or continue as a guest to invite a friend"
+			},
+			"chess": {
+				"title": "Chess",
+				"reset": "Reset",
+				"resign": "Resign",
+				"switch_orientation": "Switch orientation",
+				"winner_msg": "{winner} wins",
+				"color": {
+					"white": "White",
+					"black": "Black"
+				},
+				"turn": {
+					"draw": "Draw",
+					"your_turn_msg": "Your turn",
+					"waiting_msg": "Waiting for your opponent",
+					"turn_msg": "{current_player} to move"
+				},
+				"draw": {
+					"draw_offer": "Your opponent offers a draw",
+					"accept_draw": "Accept draw",
+					"offer_draw": "Offer draw"
+				},
+				"reason": {
+					"stalemate": "Stalemate"
+				}
+			},
+			"tic-tac-toe": {
+				"player": "You",
+				"other_player": "Opponent",
+				"win": "You win!",
+				"lose": "You lose",
+				"tie": "It's a tie",
+				"your-turn": "Your turn",
+				"waiting": "Waiting",
+				"reset": "Reset"
+			}
+		}
+	}
+}

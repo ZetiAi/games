@@ -10,7 +10,8 @@
 	import { faHandshake } from '@fortawesome/free-regular-svg-icons';
 
 	import ChessBoard from '$lib/components/playground/ChessBoard.svelte';
-	//import { user } from '$lib/stores/user';
+	import { user } from '$lib/stores/user';
+	import { _ } from '$lib/i18n';
 	import ChessEngine from '../../../routes/games/chess/chess_engine';
 	import { roomStatus } from '$lib/observables/chess';
 	import type {
@@ -18,10 +19,7 @@
 		GameRoom,
 		Players
 	} from '$lib/types/playground_interfaces';
-	//import {
-	//	resetGame,
-	//	updateUserRecord
-	//} from '$lib/firebase/firestore/playground';
+	import { resetGame, updateUserRecord } from '$lib/firebase/playground';
 	import {
 		saveGame,
 		resign,
@@ -62,7 +60,7 @@
 	};
 
 	onDestroy(() => {
-		chessObserver.unsubscribe();
+		if (chessObserver) chessObserver.unsubscribe();
 	});
 
 	const isUserPlaying = (players: string[]) => {
@@ -74,11 +72,13 @@
 
 	onMount(async () => {
 		await ChessEngine.initWasm();
-		engine = new ChessEngine();
+		// Shared with <ChessBoard> through bind:engine; whichever of the two is
+		// ready first creates it.
+		engine = engine ?? new ChessEngine();
 
 		chessObserver = roomStatus(roomId).subscribe((chessRoom: GameRoom) => {
 			if (!chessRoom) {
-				goto('/playground', { replaceState: true });
+				goto('/games', { replaceState: true });
 				return;
 			}
 			const { game } = chessRoom;
@@ -92,13 +92,14 @@
 			playerColor = getPlayerColor(chessRoom.players);
 			opponentEmail = getOpponentEmail(chessRoom.players);
 			board.setOrientation(playerColor.toLocaleLowerCase()[0]);
-			winner = chessGame.winner;
+			winner = chessGame.winner || '';
+			reason = chessGame.reason || '';
 			engine.state = game.state;
 			board.setPosition(engine.fen());
 			board.removeMarkers();
 			addKingMarker();
 			board.disableMoveInput();
-			if (currentPlayer === playerColor) {
+			if (chessRoom.active && currentPlayer === playerColor) {
 				if ($user && isUserPlaying(players)) {
 					board.enableMoveInput(inputHandler);
 				}
@@ -130,7 +131,7 @@
 	const finishGame = async () => {
 		let _winner = '';
 		let _looser = '';
-		if (_winner === playerColor) {
+		if (winner.toLowerCase() === playerColor.toLowerCase()) {
 			_winner = $user.email;
 			_looser = opponentEmail;
 		} else {
@@ -168,6 +169,8 @@
 	const nextMove = () => {
 		updateGameState({
 			...chessGame,
+			// a checkmate ends the match, like a resignation or an accepted draw
+			active: chessGame.active && !gameOver,
 			winner,
 			reason,
 			game: {
@@ -228,7 +231,7 @@
 		bind:moves
 		bind:lastSquare
 		bind:kingMarker>
-		<div slot="turn" class="bg-orange-400">
+		<div slot="turn" class="bg-orange-400" data-testid="turn-banner">
 			{#if isDraw}
 				<p class="bg-brand-secondary">
 					{$_('pages.games.chess.turn.draw')}

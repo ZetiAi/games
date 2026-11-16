@@ -8,6 +8,7 @@
 	import { account } from '$lib/stores/PhantomAccount';
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import { faHandPeace } from '@fortawesome/free-regular-svg-icons';
+	import { _ } from '$lib/i18n';
 
 	type PhantomExtensionStatus = 'checking' | 'isInstalled' | 'notInstalled';
 

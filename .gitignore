@@ -8,3 +8,9 @@ node_modules
 !.env.example
 .vercel
 .output
+.pnpm-store
+/test-results
+/playwright-report
+/.e2e
+*-debug.log
+/.docker-buildx

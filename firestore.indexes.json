@@ -1,0 +1,23 @@
+{
+	"indexes": [
+		{
+			"collectionGroup": "games",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "playersName", "arrayConfig": "CONTAINS" },
+				{ "fieldPath": "active", "order": "ASCENDING" },
+				{ "fieldPath": "lastMove", "order": "DESCENDING" }
+			]
+		},
+		{
+			"collectionGroup": "invitations",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "to", "order": "ASCENDING" },
+				{ "fieldPath": "accepted", "order": "ASCENDING" },
+				{ "fieldPath": "timestamp", "order": "DESCENDING" }
+			]
+		}
+	],
+	"fieldOverrides": []
+}

@@ -1,21 +1,13 @@
-<script context="module">
-	//import { user } from '$lib/stores/user';
-
-	export async function load({ session }) {
-		const _user = session?.user;
-		// console.log('user loaded:', _user);
-		if (_user) {
-			user.setUser(_user);
-		}
-		return {
-			status: 200
-		};
-	}
+<script>
+	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import { authReady } from '$lib/stores/user';
 </script>
 
 <div class="flex h-full justify-center">
-	<slot />
+	{#if $authReady}
+		<slot />
+	{:else}
+		<!-- wait until we know who is signed in before rendering a game -->
+		<Spinner class="!border-l-orange-400" />
+	{/if}
 </div>
-
-<style>
-</style>

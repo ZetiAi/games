@@ -3,12 +3,14 @@
 
 	import Icon from 'svelte-fa';
 
-	//import { user } from '$lib/stores/user';
+	import { user } from '$lib/stores/user';
+	import { _ } from '$lib/i18n';
 
 	import ChessRandom from '$lib/components/playground/ChessRandom.svelte';
 	import SpanError from '$lib/components/ui/SpanError.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
-	//import { createInvitation } from '$lib/firebase/firestore/playground';
+	import { createInvitation } from '$lib/firebase/playground';
+	import { normalizePlayerId } from '$lib/firebase/auth';
 
 	let friendEmail = '';
 	let invitationSent = false;
@@ -24,7 +26,7 @@
 	let select: GameSelection;
 
 	const sendInvitation = async () => {
-		if (friendEmail === $user.email) return false;
+		if (normalizePlayerId(friendEmail) === $user.email) return false;
 		try {
 			errorSending = false;
 			loadingInvitation = true;
@@ -67,6 +69,7 @@
 						<p class="font-semibold text-red-600">
 							{$_('pages.games.game_menu.login_first_alert')}
 						</p>
+						<a href="/login?next=/games/chess" class="font-bold">Sign in</a>
 					</div>
 				{:else}
 					<div>
@@ -76,7 +79,7 @@
 								<input
 									required
 									bind:value={friendEmail}
-									placeholder="friend@email.com"
+									placeholder="friend@email.com or guest-1a2b3c4d"
 									class="border p-1 dark:text-black" />
 							</label>
 							<button

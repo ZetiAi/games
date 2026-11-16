@@ -16,6 +16,8 @@ const DEFAULT_BOARD: number[][] = [
  * The chess class
  */
 export default class ChessEnv {
+	private static wasmReady: Promise<unknown> | undefined;
+
 	board: number[][];
 	engine: ChessEngine;
 	state: State;
@@ -24,8 +26,16 @@ export default class ChessEnv {
 	 * init wasm
 	 * @return {void} it just init.
 	 */
-	public static async initWasm() {
-		await init();
+	public static initWasm(): Promise<unknown> {
+		// Every caller shares one instantiation: a second `init()` would swap the
+		// wasm instance underneath engines that were created from the first one.
+		if (!ChessEnv.wasmReady) {
+			ChessEnv.wasmReady = init().catch((err) => {
+				ChessEnv.wasmReady = undefined;
+				throw err;
+			});
+		}
+		return ChessEnv.wasmReady;
 	}
 
 	/**
@@ -222,7 +232,6 @@ export default class ChessEnv {
 	 */
 	public getKingPosition(color: string) {
 		const { board } = this.state as any;
-		console.log(board);
 		const king = color === 'w' ? 1 : -1;
 		for (let i = 0; i < board.length; i++) {
 			for (let j = 0; j < board[i].length; j++) {

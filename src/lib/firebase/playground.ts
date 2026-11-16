@@ -3,9 +3,11 @@ import type {
 	GameInvitation,
 	GameRoom
 } from '$lib/types/playground_interfaces';
-//import { Firebase } from '$lib/firebase/init';
+import { Firebase } from '$lib/firebase/init';
+import { createChatRoom } from '$lib/firebase/chat';
+import { normalizePlayerId } from '$lib/firebase/auth';
 
-//import { user } from '$lib/stores/user';
+import { user } from '$lib/stores/user';
 import { get } from 'svelte/store';
 
 import {
@@ -122,10 +124,10 @@ const newInvitation = async (
 	const q = query(usersRef, where('email', '==', to), limit(1));
 	const usersSnapshot = await getDocs(q);
 
-	if (usersSnapshot.empty || !usersSnapshot.docs[0].exists) {
+	if (usersSnapshot.empty || !usersSnapshot.docs[0].exists()) {
 		throw Error('user not found');
 	} else {
-		const invitationRef = collection(db, 'invitations');
+		const invitationRef = doc(collection(db, 'invitations'));
 
 		return {
 			id: invitationRef.id,
@@ -146,16 +148,17 @@ export const createGameRoom = async (invitation: GameInvitation) => {
 		invitation.from,
 		invitation.to
 	]);
-	await acceptInvitation(invitation.id);
-	const gameRoomRef = doc(db, 'games');
+	const gameRoomRef = doc(collection(db, 'games'));
 	gameRoom.id = gameRoomRef.id;
 	await setDoc(gameRoomRef, gameRoom);
+	await acceptInvitation(invitation.id, gameRoom.id);
+	return gameRoom.id;
 };
 
 export const createInvitation = async (to: string, gameType: string) => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
-	const invitation: GameInvitation = await newInvitation(to, gameType);
+	const invitation: GameInvitation = await newInvitation(normalizePlayerId(to), gameType);
 	const invitationRef = doc(db, `invitations/${invitation.id}`);
 	await setDoc(invitationRef, invitation);
 };
@@ -172,7 +175,7 @@ export const resetGame = async (actualGame: GameRoom) => {
 	await setDoc(gameRef, newGame);
 };
 
-export const acceptInvitation = async (invitationId: string) => {
+export const acceptInvitation = async (invitationId: string, gameId = '') => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
 
@@ -180,7 +183,8 @@ export const acceptInvitation = async (invitationId: string) => {
 	await setDoc(
 		invitationRef,
 		{
-			accepted: true
+			accepted: true,
+			gameId
 		},
 		{
 			merge: true

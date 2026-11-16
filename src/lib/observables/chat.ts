@@ -1,17 +1,8 @@
-import {
-	collection,
-	orderBy,
-	query,
-	doc,
-	where,
-	getDoc
-} from 'firebase/firestore';
-import { map } from 'rxjs/operators';
+import { collection, orderBy, query, doc, getDoc } from 'firebase/firestore';
+import { EMPTY } from 'rxjs';
 
-// import { Firebase } from '$lib/firebase/init';
-import { get } from 'svelte/store';
+import { Firebase } from '$lib/firebase/init';
 import { collectionData } from './rxfire/collection';
-import { session } from '$app/stores';
 
 export const chatGame = async (gameId: string) => {
 	const firebase = Firebase.getInstance();
@@ -20,9 +11,10 @@ export const chatGame = async (gameId: string) => {
 	const gameRef = doc(db, `games/${gameId}`);
 	const gameSnapshot = await getDoc(gameRef);
 
-	const chatRef = gameSnapshot.data().chatRoom;
+	const chatRef = gameSnapshot.data()?.chatRoom;
+	if (!chatRef) return EMPTY;
 
-	const chatQuery = chatRef.collection('chats').orderBy('time', 'desc');
+	const chatQuery = query(collection(chatRef, 'chats'), orderBy('time', 'desc'));
 
 	return collectionData(chatQuery);
 };

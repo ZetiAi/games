@@ -1,5 +1,6 @@
 <script>
 	import Icon from 'svelte-fa';
+	import { _ } from '$lib/i18n';
 
 	// import { scale, fade } from "svelte/transition";
 	import Spinner from './Spinner.svelte';

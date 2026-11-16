@@ -1,13 +1,13 @@
 <script>
-
 	import Icon from 'svelte-fa';
-	import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+	import { faTimes } from '@fortawesome/free-solid-svg-icons';
 	import { faCircle } from '@fortawesome/free-regular-svg-icons';
 	import { onMount } from 'svelte';
 
-	//import { darkMode } from '$lib/stores/storeDark';
+	import { darkMode } from '$lib/stores/storeDark';
+	import { _ } from '$lib/i18n';
 	import init, { TicTacToe } from 'rustytac';
-	///import { playTicTacToe } from '$lib/services/';
+	import { playTicTacToe } from '$lib/services/ai';
 
 	let tictactoe;
 	let board = [
@@ -88,7 +88,14 @@
 
 		let i = 0;
 		let j = 0;
-		if (!bot) {
+		let aiMove;
+		if (bot) {
+			aiMove = await playTicTacToe(whofirst, board);
+		}
+		if (Array.isArray(aiMove) && board[aiMove[0]]?.[aiMove[1]] === 'Nil') {
+			[i, j] = aiMove;
+		} else {
+			// bot switched off, or the AI service did not answer with a legal move
 			let exists = true;
 			while (exists) {
 				i = Math.floor(Math.random() * 3);
@@ -97,9 +104,6 @@
 					exists = false;
 				}
 			}
-		} else {
-			[i, j] = await playTicTacToe(whofirst, board);
-			console.log('row:', i, 'col:', j);
 		}
 
 		setTimeout(() => {

@@ -4,7 +4,8 @@
 
 	import Icon from 'svelte-fa';
 
-
+	import { _, lang } from '$lib/i18n';
+	import { timeAgo } from '$lib/utils/dates';
 	import type { GameInvitation } from '$lib/types/playground_interfaces';
 	import { invitationStatus } from '$lib/observables/invitations';
 
@@ -16,20 +17,6 @@
 	let invitationObservable;
 	let invitations: GameInvitation[] = [];
 
-	const getLocale = () => {
-		switch ($lang) {
-			case 'es':
-				return es;
-			case 'fr':
-				return fr;
-			case 'de':
-				return de;
-			default:
-				return enUS;
-		}
-	};
-
-	let locale = getLocale();
 	let loading = false;
 
 	onMount(() => {
@@ -44,7 +31,7 @@
 	});
 
 	onDestroy(() => {
-		invitationObservable.unsubscribe();
+		if (invitationObservable) invitationObservable.unsubscribe();
 	});
 
 	const declineInvitation = async (invitationId: string) => {
@@ -71,9 +58,10 @@
 {:else if invitations.length > 0}
 	<div>
 		{#each invitations as invitation, idx}
-			{@const invitationDate = new Date(invitation.timestamp.toString())}
 			{#if !invitation.accepted}
 				<div
+					data-testid="invitation"
+					data-from={invitation.from}
 					class="dark:bg-dark-500
                 my-4
                 space-y-3 border bg-gray-50 p-2 shadow-md dark:border-0">
@@ -88,10 +76,7 @@
 								{$_('pages.games.invitations.invitation_msg_2')}
 							</p>
 							<p class="text-xs text-gray-400">
-								{formatDistance(invitationDate, new Date(), {
-									addSuffix: true,
-									locale
-								})}
+								{timeAgo(invitation.timestamp, $lang)}
 							</p>
 						</div>
 						<span

@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { gamesStatus } from '$lib/observables/playground';
+	import { gamesStatus, playerRecord } from '$lib/observables/playground';
 	import type {
 		GameRoom,
 		PlayerRecord,
 		Players
 	} from '$lib/types/playground_interfaces';
 
-	//import { user } from '$lib/stores/user';
-
+	import { user } from '$lib/stores/user';
+	import { lang } from '$lib/i18n';
+	import { timeAgo } from '$lib/utils/dates';
 
 	import UserCard from './UserCard.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
@@ -24,22 +25,21 @@
 
 
 	let gameObservable;
+	let playerRecordObservable;
 	onMount(() => {
 		loading = true;
 		gameObservable = gamesStatus().subscribe((value: GameRoom[]) => {
-			console.log('game value', value);
 			rooms = value;
 			loading = false;
 		});
-		// playerRecordObservable = playerRecord().subscribe((_playerRecord: PlayerRecord) => {
-		// 	console.log('userRecord', _playerRecord);
-		// 	userRecord = _playerRecord ?? { wins: 0, draws: 0, losses: 0 };
-		// });
+		playerRecordObservable = playerRecord().subscribe((_playerRecord: PlayerRecord) => {
+			userRecord = { wins: 0, draws: 0, losses: 0, ..._playerRecord };
+		});
 	});
 
 	onDestroy(() => {
-		// gameObservable.unsubscribe();
-		// playerRecordObservable.unsubscribe();
+		if (gameObservable) gameObservable.unsubscribe();
+		if (playerRecordObservable) playerRecordObservable.unsubscribe();
 	});
 
 	const isPlayerTurn = (currentPlayer: string, players: Players): boolean => {
@@ -94,7 +94,7 @@
 				<p class="dark:text-light-200 text-sm font-semibold">
 					Wins
 				</p>
-				<p class="text-lg font-bold text-orange-600">
+				<p class="text-lg font-bold text-orange-600" data-testid="record-wins">
 					{userRecord.wins}
 				</p>
 			</div>
@@ -102,7 +102,7 @@
 				<p class="dark:text-light-200 text-sm font-semibold text-gray-500">
 					Loses
 				</p>
-				<p class="text-lg font-bold text-orange-600">
+				<p class="text-lg font-bold text-orange-600" data-testid="record-losses">
 					{userRecord.losses}
 				</p>
 			</div>
@@ -110,12 +110,12 @@
 				<p class="dark:text-light-200 text-sm font-semibold text-gray-500">
 					Draws
 				</p>
-				<p class="text-lg font-bold text-orange-600">
+				<p class="text-lg font-bold text-orange-600" data-testid="record-draws">
 					{userRecord.draws}
 				</p>
 			</div>
 		</div>
-		<div class="space-y-1">
+		<div class="space-y-1" data-testid="your-turn">
 			<p
 				class="rounded-md
       bg-orange-600 text-center
@@ -124,21 +124,17 @@
 				Your Turn
 			</p>
 			{#each rooms as room}
-				{@const roomDate = new Date(room.lastMove?.toString())}
 				{#if isPlayerTurn(room.game.state.current_player, room.players)}
 					<UserCard
 						gameId={room.id}
-						formatDistanceDate={formatDistance(roomDate, new Date(), {
-							addSuffix: true,
-							locale
-						})}
+						formatDistanceDate={timeAgo(room.lastMove, $lang)}
 						userName={getOtherPlayerName(room.playersName)}
 						userPhotoURL={getOtherPlayerPhotoURL(room.players)}
 						roomType={room.type} />
 				{/if}
 			{/each}
 		</div>
-		<div class="space-y-1">
+		<div class="space-y-1" data-testid="their-turn">
 			<p
 				class="!dark:text-black
       rounded-md bg-orange-600
@@ -147,14 +143,10 @@
 				Their Turn
 			</p>
 			{#each rooms as room}
-				{@const roomDate = new Date(room.lastMove?.toString())}
 				{#if !isPlayerTurn(room.game.state.current_player, room.players)}
 					<UserCard
 						gameId={room.id}
-						formatDistanceDate={formatDistance(roomDate, new Date(), {
-							addSuffix: true,
-							locale
-						})}
+						formatDistanceDate={timeAgo(room.lastMove, $lang)}
 						userName={getOtherPlayerName(room.playersName)}
 						userPhotoURL={getOtherPlayerPhotoURL(room.players)}
 						roomType={room.type} />

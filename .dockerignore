@@ -1,0 +1,14 @@
+.git
+node_modules
+.pnpm-store
+.svelte-kit
+build
+.env
+.env.*
+!.env.example
+contracts
+test-results
+playwright-report
+.e2e
+
+.docker-buildx

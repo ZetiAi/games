@@ -6,8 +6,10 @@
 		BORDER_TYPE
 	} from 'cm-chessboard/src/cm-chessboard/Chessboard';
 	import 'cm-chessboard/assets/styles/cm-chessboard.css';
+	import spriteUrl from 'cm-chessboard/assets/images/chessboard-sprite-staunty.svg?url';
 
 	import { onMount } from 'svelte';
+	import { _ } from '$lib/i18n';
 	import type { State } from '$lib/types/chess';
 	import ChessEngine from '../../../routes/games/chess/chess_engine';
 
@@ -34,13 +36,15 @@
 				aspectRatio: 1
 			},
 			sprite: {
-				url: '/svg/chessboard-sprite-staunty.svg'
+				url: spriteUrl
 			}
 		});
 		board.enableMoveInput(inputHandler);
 
 		await ChessEngine.initWasm();
-		engine = new ChessEngine();
+		// A parent that binds `engine` may already have created it (and loaded a
+		// saved position into it); never replace that one.
+		engine = engine ?? new ChessEngine();
 
 		addState(engine.state);
 	});
@@ -89,9 +93,10 @@
 		}
 		if (engine.checkmate()) {
 			reason = 'checkmate';
-			winner = engine.getCurrentPlayer() === 'WHITE' ? 'black' : 'white';
+			// The player who is to move is the one who has been mated.
+			winner = engine.getCurrentPlayer().toUpperCase() === 'WHITE' ? 'black' : 'white';
 			gameOver = true;
-			callbackWinner();
+			if (callbackWinner) callbackWinner();
 			board.disableMoveInput();
 		}
 		if (engine.inStalemate()) {
