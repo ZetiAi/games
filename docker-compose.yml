@@ -31,6 +31,13 @@ services:
     # The emulators write their state to the volume while shutting down; give
     # them time to finish before Docker kills the container.
     stop_grace_period: 2m
+    # Cold Java/UI startup can take several minutes on a busy Docker host.
+    # Keep the image's readiness probe, but allow time before declaring failure.
+    healthcheck:
+      start_period: 180s
+      interval: 5s
+      timeout: 10s
+      retries: 24
 
   # Stand-in for the AI service behind VITE_API_AI (tic-tac-toe only).
   ai:
