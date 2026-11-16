@@ -19,5 +19,5 @@ COPY tests ./tests
 ENV HOME=/tmp/home
 RUN mkdir -p /tmp/home && chmod 1777 /tmp/home
 
-ENTRYPOINT ["bun", "run", "node_modules/@playwright/test/cli.js"]
+ENTRYPOINT ["node", "node_modules/@playwright/test/cli.js"]
 CMD ["test"]
