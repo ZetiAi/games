@@ -2,11 +2,8 @@
 	import Invitations from '$lib/components/playground/Invitations.svelte';
 	import Turns from '$lib/components/playground/Turns.svelte';
 
-	//import { _ } from 'svelte-intl-precompile';
-
-	//import { user } from '$lib/stores/user';
-
-	console.log($user);
+	import { _ } from '$lib/i18n';
+	import { user } from '$lib/stores/user';
 
 	let badgeSelected = 1;
 
@@ -27,6 +24,7 @@
 <section class="background mt-3">
 	<div class="text-center">
 		<span
+			data-testid="tab-explore"
 			on:click={() => (badgeSelected = 0)}
 			class:active={badgeSelected === 0}
 			class="dark:bg-dark-400 cursor-pointer rounded-lg bg-zinc-200 px-2 py-1 font-semibold
@@ -34,6 +32,7 @@
 			{$_('pages.games.explore')}
 		</span>
 		<span
+			data-testid="tab-games"
 			on:click={() => (badgeSelected = 1)}
 			class:active={badgeSelected === 1}
 			class="dark:bg-dark-400 cursor-pointer rounded-lg bg-zinc-200 px-2 py-1 font-semibold
@@ -41,6 +40,7 @@
 			{$_('pages.games.games')}
 		</span>
 		<span
+			data-testid="tab-invites"
 			on:click={() => (badgeSelected = 2)}
 			class:active={badgeSelected === 2}
 			class="dark:bg-dark-400 cursor-pointer rounded-lg bg-zinc-200 px-2 py-1 font-semibold
@@ -80,6 +80,11 @@
 			<div class="flex flex-col items-center text-center">
 				<img class="max-w-48" src="/assets/sign_in.svg" alt="sing in" />
 				<p class="text-2xl dark:text-white">{$_('pages.games.sign-in')}</p>
+				<a
+					href="/login?next=/games"
+					class="bg-brand-enter mt-3 rounded-md px-3 py-1 font-bold text-white">
+					Sign in
+				</a>
 			</div>
 		{/if}
 	</section>

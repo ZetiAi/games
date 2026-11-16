@@ -4,6 +4,8 @@
 	import logo from './svelte-logo.svg';
 	import { onMount } from 'svelte';
 	import { account } from '$lib/stores/PhantomAccount';
+	import { authReady, user } from '$lib/stores/user';
+	import { signOutUser } from '$lib/firebase/auth';
 	import {
 		goInstallPhantom,
 		isPhantomInstalled,
@@ -31,6 +33,19 @@
 		}
 	};
 
+	let confirmGuestSignOut = false;
+
+	const onSignOut = async () => {
+		// A guest account cannot be signed back into: leaving it means losing
+		// access to its matches, so ask first.
+		if ($user?.isGuest && !confirmGuestSignOut) {
+			confirmGuestSignOut = true;
+			return;
+		}
+		confirmGuestSignOut = false;
+		await signOutUser();
+	};
+
 	const onDisconnectDispatcher = () => {
 		if ($account) {
 			return phantomDisconnect();
@@ -53,17 +68,36 @@
 		</svg>
 		<ul>
 			<li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
-			<li class:active={$page.url.pathname === '/about'}>
-				<a sveltekit:prefetch href="/about">About</a>
-			</li>
-			<li class:active={$page.url.pathname === '/todos'}>
-				<a sveltekit:prefetch href="/todos">Todos</a>
+			<li class:active={$page.url.pathname.startsWith('/games')}>
+				<a sveltekit:prefetch href="/games">Games</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
 		</svg>
 	</nav>
+
+	<div class="account">
+		{#if $authReady}
+			{#if $user}
+				<span class="player" data-testid="player-id" title="Friends invite you with this ID">
+					{$user.email}
+				</span>
+				{#if $user.isGuest}<span class="badge">guest</span>{/if}
+				{#if confirmGuestSignOut}
+					<span class="warning" role="alert">
+						Guest matches cannot be recovered after signing out.
+					</span>
+					<button on:click={onSignOut}>Sign out anyway</button>
+					<button on:click={() => (confirmGuestSignOut = false)}>Stay</button>
+				{:else}
+					<button on:click={onSignOut}>Sign out</button>
+				{/if}
+			{:else}
+				<a href="/login">Sign in</a>
+			{/if}
+		{/if}
+	</div>
 
 	<div class="corner">
 		{#if isInstalled == 'notInstalled'}
@@ -123,6 +157,40 @@
 	.corner {
 		width: 3em;
 		height: 3em;
+	}
+
+	.account {
+		display: flex;
+		flex: 1;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 0.5em;
+		padding: 0 0.5em;
+		font-size: 0.8rem;
+	}
+
+	.account .player {
+		font-weight: 700;
+	}
+
+	.account .badge {
+		padding: 0 0.4em;
+		border-radius: 0.5em;
+		background: #fed7aa;
+		color: #9a3412;
+	}
+
+	.account .warning {
+		color: #b91c1c;
+	}
+
+	.account button,
+	.account a {
+		padding: 0.1em 0.6em;
+		border: 1px solid currentColor;
+		border-radius: 0.4em;
+		font-weight: 700;
 	}
 
 	.corner a {

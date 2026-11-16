@@ -3,12 +3,12 @@ import { get } from 'svelte/store';
 
 import { collection, orderBy, query, doc, where } from 'firebase/firestore';
 
-// import { user } from '$lib/stores/user';
+import { user } from '$lib/stores/user';
 import type { GameRoom } from '$lib/types/playground_interfaces';
-// import type { User } from '$lib/types/user_interfaces';
+import type { User } from '$lib/types/user_interfaces';
 import { collectionData } from './rxfire/collection';
 import { docData } from './rxfire/document';
-// import { Firebase } from '$lib/firebase/init';
+import { Firebase } from '$lib/firebase/init';
 import type { State } from '$lib/types/chess';
 
 const transformToChessState = (gameRooms: GameRoom[]) => {
@@ -32,10 +32,6 @@ export const gamesStatus = () => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
 
-	console.log(_firebase.getAuth().currentUser);
-
-	console.log('email', _user?.email);
-
 	const gamesRef = collection(db, 'games');
 	const q = query(
 		gamesRef,
@@ -56,5 +52,5 @@ export const playerRecord = () => {
 
 	const userRef = doc(db, `users/${_user.id}`);
 
-	return docData(userRef).pipe(map((user: User) => user.gameRecord));
+	return docData(userRef).pipe(map((user: User) => user?.gameRecord));
 };

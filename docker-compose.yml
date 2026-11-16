@@ -1,0 +1,82 @@
+# Local development environment: the app plus the services it depends on.
+#
+#   docker compose up --build        start everything (Ctrl-C or `docker compose stop` to stop)
+#   docker compose down              stop and remove containers; game data is kept
+#   docker compose down --volumes    ... and wipe all accounts, guests and matches
+#
+# Ports are published on 127.0.0.1 only. To let a second player join from
+# another device on your network, start with BIND_ADDRESS=0.0.0.0.
+name: games
+
+services:
+  # Firebase Auth + Firestore emulators. All accounts (including guests),
+  # matches, chats and invitations live here and are saved to the
+  # `firebase-data` volume, so they survive a stop/start. See
+  # docker/firebase/entrypoint.sh.
+  firebase:
+    build:
+      context: .
+      dockerfile: docker/firebase/Dockerfile
+    environment:
+      SNAPSHOT_INTERVAL_SECONDS: ${SNAPSHOT_INTERVAL_SECONDS:-60}
+    volumes:
+      - firebase-data:/data
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:4000:4000' # Emulator UI
+      - '${BIND_ADDRESS:-127.0.0.1}:4400:4400' # Emulator hub
+      - '${BIND_ADDRESS:-127.0.0.1}:4500:4500' # Emulator UI logs
+      - '${BIND_ADDRESS:-127.0.0.1}:8080:8080' # Firestore
+      - '${BIND_ADDRESS:-127.0.0.1}:9099:9099' # Auth
+      - '${BIND_ADDRESS:-127.0.0.1}:9150:9150' # Firestore websocket (Emulator UI)
+    # The emulators write their state to the volume while shutting down; give
+    # them time to finish before Docker kills the container.
+    stop_grace_period: 2m
+
+  # Stand-in for the AI service behind VITE_API_AI (tic-tac-toe only).
+  ai:
+    build:
+      context: .
+      dockerfile: docker/ai-stub/Dockerfile
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:8787:8787'
+
+  # The SvelteKit app (vite dev server with live reload).
+  web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+    environment:
+      VITE_USE_EMULATOR: 'true'
+      VITE_PROJECT_ID: demo-games
+      # Left empty on purpose: the browser then uses the host the page was
+      # loaded from, which is right both for localhost and for a LAN address.
+      VITE_EMULATOR_HOST: ''
+      VITE_API_AI: ''
+    # Source is mounted read-only for live reload; dependencies and build
+    # output stay inside the container. After changing package.json or a
+    # config file, run `docker compose up --build`.
+    volumes:
+      - ./src:/app/src:ro
+      - ./static:/app/static:ro
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:5173:5173'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:5173/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+        ]
+      interval: 5s
+      timeout: 5s
+      start_period: 60s
+      retries: 12
+    depends_on:
+      firebase:
+        condition: service_healthy
+      ai:
+        condition: service_healthy
+
+volumes:
+  firebase-data:

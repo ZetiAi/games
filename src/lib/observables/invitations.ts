@@ -1,8 +1,7 @@
-// import { collectionData } from 'rxfire/firestore';
 import { get } from 'svelte/store';
 
-// import { Firebase } from '$lib/firebase/init';
-// import { user } from '$lib/stores/user';
+import { Firebase } from '$lib/firebase/init';
+import { user } from '$lib/stores/user';
 
 import { collection, orderBy, query, where } from 'firebase/firestore';
 import { collectionData } from './rxfire/collection';

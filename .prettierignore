@@ -7,7 +7,8 @@ node_modules
 .env.*
 !.env.example
 
-# Ignore files for PNPM, NPM and YARN
-pnpm-lock.yaml
-package-lock.json
-yarn.lock
+# Generated lockfiles and browser artifacts
+bun.lock
+.e2e
+playwright-report
+test-results

@@ -1,16 +1,5 @@
-// import { user } from '$lib/stores/user';
-//import { get } from 'svelte/store';
-//import { Firebase } from '$lib/firebase/init';
-// import type { User } from '$lib/types/user_interfaces';
-import {
-	serverTimestamp,
-	collection,
-	doc,
-	setDoc,
-	deleteDoc,
-	writeBatch,
-	Timestamp
-} from 'firebase/firestore';
+import { Firebase } from '$lib/firebase/init';
+import { serverTimestamp, doc, setDoc, deleteDoc } from 'firebase/firestore';
 
 
 export const deleteInvitation = async (
@@ -42,7 +31,7 @@ export const saveGame = async (gameState): Promise<boolean> => {
 		console.log('save game game state: ', gameState);
 
 		const gameRef = doc(db, `games/${gameState.id}`);
-		await setDoc(gameRef, gameState);
+		await setDoc(gameRef, { ...gameState, lastMove: serverTimestamp() });
 
 		return true;
 	} catch (err) {

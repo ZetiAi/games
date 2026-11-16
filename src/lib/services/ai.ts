@@ -1,3 +1,16 @@
+/**
+ * Base URL of the AI service. With the local emulators and no explicit
+ * VITE_API_AI, use the stub that docker-compose starts next to them.
+ */
+const aiBaseUrl = (): string => {
+	const configured = import.meta.env.VITE_API_AI;
+	if (configured) return configured;
+	if (import.meta.env.VITE_USE_EMULATOR === 'true' && typeof window !== 'undefined') {
+		return `${window.location.protocol}//${window.location.hostname}:8787`;
+	}
+	return '';
+};
+
 export const playTicTacToe = async (
 	firstPlayer: string,
 	board: string[][]
@@ -15,8 +28,7 @@ export const playTicTacToe = async (
 			})
 		});
 
-		console.log(body);
-		const resp = await fetch(import.meta.env.VITE_API_AI + '/play', {
+		const resp = await fetch(aiBaseUrl() + '/play', {
 			method: 'POST',
 			body,
 			headers: {
@@ -24,8 +36,8 @@ export const playTicTacToe = async (
 			}
 		});
 
+		if (!resp.ok) throw new Error(`AI service answered ${resp.status}`);
 		const json = await resp.json();
-		console.log(json);
 		return [json.row - 1, json.col - 1];
 	} catch (e) {
 		console.log(e);
@@ -41,8 +53,7 @@ export const playChess = async (gameState: [[]]): Promise<any> => {
 			game_state: gameState
 		});
 
-		console.log(body);
-		const resp = await fetch(import.meta.env.VITE_API_AI + '/play', {
+		const resp = await fetch(aiBaseUrl() + '/play', {
 			method: 'POST',
 			body,
 			headers: {

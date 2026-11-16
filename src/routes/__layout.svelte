@@ -1,6 +1,12 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Header from '$lib/components/layout/Header.svelte';
+	import { initAuth } from '$lib/firebase/auth';
+	import 'virtual:windi.css';
 	import '../app.css';
+
+	// Restores a returning player (registered or guest) from this browser.
+	onMount(initAuth);
 </script>
 
 <Header />

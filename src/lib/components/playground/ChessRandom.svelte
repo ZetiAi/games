@@ -1,9 +1,6 @@
 <script lang="ts">
 	import ChessBoard from './ChessBoard.svelte';
-
-
-	//import { user } from '$lib/stores/user';
-
+	import { _ } from '$lib/i18n';
 
 	let engine;
 	let board;
@@ -37,7 +34,10 @@
 
 	let loading = false;
 
-	
+	// The bot that answered here is not part of this repository.
+	const send = () => {
+		message = '';
+	};
 </script>
 
 <div class="max-h-132 flex h-full w-full justify-center space-x-4">
@@ -57,8 +57,6 @@
 			class="mt-auto w-full border p-1" />
 	</form>
 	<ChessBoard
-		callbackWinner
-		inputHandler
 		bind:engine
 		bind:board
 		bind:gameOver

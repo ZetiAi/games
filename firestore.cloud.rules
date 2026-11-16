@@ -1,0 +1,11 @@
+rules_version = '2';
+
+// Closed while the client-only game is prepared for cloud use.
+// Emulator rules must never be deployed to this project.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

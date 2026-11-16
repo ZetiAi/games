@@ -1,0 +1,55 @@
+# Overrides for the automated tests. Used by scripts/test-e2e.sh as a separate
+# Compose project (`games-test`) with its own data volume, so running the tests
+# never touches the accounts and matches of the development environment and
+# does not need its ports.
+services:
+  firebase:
+    ports: !reset []
+
+  ai:
+    ports: !reset []
+
+  # The tests run against a production build served by `vite preview`.
+  web:
+    ports: !reset []
+    volumes: !reset []
+    environment:
+      VITE_EMULATOR_HOST: firebase
+      VITE_API_AI: http://ai:8787
+    command: ['sh', '-c', 'bun run build && bun run preview --host 0.0.0.0 --port 4173']
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:4173/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+        ]
+      interval: 5s
+      timeout: 5s
+      start_period: 120s
+      retries: 24
+
+  e2e:
+    profiles: ['e2e']
+    build:
+      context: .
+      dockerfile: docker/e2e/Dockerfile
+      args:
+        PLAYWRIGHT_VERSION: ${PLAYWRIGHT_VERSION:?set by scripts/test-e2e.sh}
+    user: '${HOST_UID:-0}:${HOST_GID:-0}'
+    environment:
+      BASE_URL: http://web:4173
+      FIRESTORE_EMULATOR_URL: http://firebase:8080
+      AUTH_EMULATOR_URL: http://firebase:9099
+      EMULATOR_UI_URL: http://firebase:4000
+      E2E_STATE_DIR: /e2e/state
+      E2E_OUTPUT_DIR: /e2e/results
+      CI: 'true'
+    # Browser profiles kept between the two halves of the restart test, and
+    # the screenshots/traces of failed tests.
+    volumes:
+      - ./.e2e:/e2e
+    depends_on:
+      web:
+        condition: service_healthy
