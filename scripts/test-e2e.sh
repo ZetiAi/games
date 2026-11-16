@@ -85,7 +85,9 @@ if [ -d .e2e ]; then
 	fi
 fi
 mkdir -p .e2e/state .e2e/results
-compose --profile e2e build # the profile includes the image with the tests
+if [ "${SKIP_BUILD:-0}" != 1 ]; then
+	compose --profile e2e build # the profile includes the image with the tests
+fi
 up
 
 step "App tests"

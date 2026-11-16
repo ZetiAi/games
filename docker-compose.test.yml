@@ -38,7 +38,11 @@ services:
       args:
         PLAYWRIGHT_VERSION: ${PLAYWRIGHT_VERSION:?set by scripts/test-e2e.sh}
     user: '${HOST_UID:-0}:${HOST_GID:-0}'
+    # Browser scratch data is disposable; profiles and reports persist on /e2e.
+    tmpfs:
+      - /tmp:rw,size=1g,mode=1777
     environment:
+      HOME: /tmp
       BASE_URL: http://web:4173
       FIRESTORE_EMULATOR_URL: http://firebase:8080
       AUTH_EMULATOR_URL: http://firebase:9099

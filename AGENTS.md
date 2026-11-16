@@ -28,6 +28,7 @@ The external production AI service is not included in this repo.
 Use Bun, pinned in `package.json`, and Docker Compose 2.24 or newer.
 `bun install --frozen-lockfile`; `bun run node_modules/@sveltejs/kit/svelte-kit.js sync`.
 Never use npm, pnpm or yarn. Docker images use Bun too.
+Keep `cm-chessboard` pinned to 5.0.1 until the input handlers are migrated: later 5.x versions rename `moveStart`/`moveDone` and silently stop moves from working.
 
 ## Run
 
@@ -42,6 +43,8 @@ Create a disposable account or choose Continue as guest. Stop with `docker compo
 the emulator dashboard, acknowledged writes during shutdown, and registered/guest recovery after
 stop/start, down/up and forced termination. Never run it in the evaluation container.
 `VITE_USE_EMULATOR=true bun run build` checks compilation; `bun run check` runs TypeScript/Svelte diagnostics.
+`SKIP_BUILD=1 bun run test:e2e` reuses already-built test images after a local infrastructure interruption.
+Browser scratch files use a 1 GiB temporary memory filesystem; persistent profiles and reports remain on `.e2e`.
 Failure screenshots/traces live in `.e2e/results`. On macOS, run the test script outside the sandbox
 when an old `.e2e` folder needs moving to the Trash.
 
@@ -49,6 +52,7 @@ when an old `.e2e` folder needs moving to the Trash.
 
 - Dev: local Docker Compose, `demo-games` emulator project, fake data only.
 - Production: Firebase `zeti-games`, Spark/free plan, owned by `zetiapp@gmail.com`. No paid services or billing link.
+- Web app ID: `1:669905884271:web:8bfdc9bbf8cb73ff6b699a`. Firestore `(default)` is in `us-central1` with deletion protection; email/password and anonymous Auth are enabled. Anonymous auto-cleanup is off to preserve guests.
 - No QA project; this is a pet project. Production deployment still requires Matthew's explicit instruction.
 - `firebase.json` and `firestore.rules` are local-only. Never deploy their permissive rules.
 - Cloud configuration lives in `firebase.cloud.json`; its rules deny all client access until cloud gameplay authorization is ready.

@@ -128,6 +128,6 @@ Screenshots and traces of failed tests are written to `.e2e/results`.
 
 ## Firebase project
 
-The single cloud project is [Games](https://console.firebase.google.com/project/zeti-games/overview) (`zeti-games`, free Spark plan). There is no QA environment. The web app is registered; the website has not been deployed.
+The single cloud project is [Games](https://console.firebase.google.com/project/zeti-games/overview) (`zeti-games`, free Spark plan). There is no QA environment. The web app is registered, email/password and guest sign-in are enabled, and Firestore is created in `us-central1`. The website has not been deployed.
 
 Local Docker uses `demo-games` and the permissive emulator rules in `firebase.json`. Cloud configuration is separate in `firebase.cloud.json` and denies client database access while player-specific authorization is prepared. Never deploy the local emulator rules to the cloud project.
