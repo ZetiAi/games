@@ -1,12 +1,8 @@
-import type {
-	DocumentData,
-	Query,
-	QueryDocumentSnapshot
-} from 'firebase/firestore';
+import type { DocumentData, Query, QueryDocumentSnapshot } from 'firebase/firestore';
 import type { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/internal/operators/map';
-import { fromRef } from './fromRef';
 import { snapToData } from './document';
+import { fromRef } from './fromRef';
 
 /**
  * Return a stream of document snapshots on a query. These results are in sort order.
@@ -15,9 +11,7 @@ import { snapToData } from './document';
 export function collection<T = DocumentData>(
 	query: Query<T>
 ): Observable<QueryDocumentSnapshot<T>[]> {
-	return fromRef(query, { includeMetadataChanges: true }).pipe(
-		map((changes) => changes.docs)
-	);
+	return fromRef(query, { includeMetadataChanges: true }).pipe(map((changes) => changes.docs));
 }
 
 /**

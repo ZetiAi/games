@@ -1,5 +1,5 @@
-import type { State } from '$lib/types/chess';
 import init, { ChessEngine } from 'chess';
+import type { State } from '$lib/types/chess';
 
 const DEFAULT_BOARD: number[][] = [
 	[-3, -5, -4, -2, -1, -4, -5, -3],
@@ -80,11 +80,7 @@ export default class ChessEnv {
 	 * @param {string} move the move.
 	 */
 	public nextState(move: string) {
-		this.state = this.engine.next_state(
-			this.state,
-			this.state.current_player.toUpperCase(),
-			move
-		);
+		this.state = this.engine.next_state(this.state, this.state.current_player.toUpperCase(), move);
 	}
 
 	/**
@@ -101,10 +97,7 @@ export default class ChessEnv {
 	 * @return {boolean} true if there is checkmate
 	 */
 	public checkmate(): boolean {
-		return this.engine.checkmate(
-			this.state,
-			this.state.current_player.toUpperCase()
-		);
+		return this.engine.checkmate(this.state, this.state.current_player.toUpperCase());
 	}
 
 	/**
@@ -112,10 +105,7 @@ export default class ChessEnv {
 	 * @return {boolean} true if there is in_stalemate
 	 */
 	public inStalemate(): boolean {
-		return this.engine.in_stalemate(
-			this.state,
-			this.state.current_player.toUpperCase()
-		);
+		return this.engine.in_stalemate(this.state, this.state.current_player.toUpperCase());
 	}
 
 	/**

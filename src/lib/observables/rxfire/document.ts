@@ -15,19 +15,13 @@
  * limitations under the License.
  */
 
-// TODO fix the import
-import type {
-	DocumentReference,
-	DocumentSnapshot,
-	DocumentData
-} from './interfaces';
 import type { Observable } from 'rxjs';
-import { fromRef } from './fromRef';
 import { map } from 'rxjs/operators';
+import { fromRef } from './fromRef';
+// TODO(#12): fix the import
+import type { DocumentData, DocumentReference, DocumentSnapshot } from './interfaces';
 
-export function doc<T = DocumentData>(
-	ref: DocumentReference<T>
-): Observable<DocumentSnapshot<T>> {
+export function doc<T = DocumentData>(ref: DocumentReference<T>): Observable<DocumentSnapshot<T>> {
 	return fromRef(ref, { includeMetadataChanges: true });
 }
 
@@ -50,7 +44,7 @@ export function snapToData<T = DocumentData>(
 		idField?: string;
 	} = {}
 ): any | undefined {
-	// TODO clean up the typings
+	// TODO(#12): clean up the typings
 	const data = snapshot.data() as any;
 	// match the behavior of the JS SDK when the snapshot doesn't exist
 	// it's possible with data converters too that the user didn't return an object

@@ -1,10 +1,9 @@
 <script>
-	import { page } from '$app/stores';
 	//import { user } from '$lib/stores/user';
-	import { onMount } from 'svelte';
-	import { chatGame } from '$lib/observables/chat';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import ChessPerson from '$lib/components/playground/ChessPerson.svelte';
+	import { chatGame } from '$lib/observables/chat';
 
 	let chatRef;
 	let chatSubscription;

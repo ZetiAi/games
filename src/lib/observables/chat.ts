@@ -1,17 +1,10 @@
-import {
-	collection,
-	orderBy,
-	query,
-	doc,
-	where,
-	getDoc
-} from 'firebase/firestore';
+import { collection, doc, getDoc, orderBy, query, where } from 'firebase/firestore';
 import { map } from 'rxjs/operators';
 
 // import { Firebase } from '$lib/firebase/init';
 import { get } from 'svelte/store';
-import { collectionData } from './rxfire/collection';
 import { session } from '$app/stores';
+import { collectionData } from './rxfire/collection';
 
 export const chatGame = async (gameId: string) => {
 	const firebase = Firebase.getInstance();

@@ -1,0 +1,163 @@
+// The one formatter and linter for every TypeScript, Svelte, Astro, JSON and CSS file in this repo.
+// It is the suite's standard setup (~/Projects/code-style.md): copy this file, and never add a
+// second tool next to it. Every rule is an error, so `biome ci` either passes or blocks the PR.
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	// What the older code has not been brought up to yet. That file may only shrink. It also
+	// switches on the two plugin rules in lint/ (one-letter names, nesting deeper than 3), which
+	// Biome has no built-in rule for.
+	"extends": ["./biome-baseline.jsonc"],
+	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+	"files": {
+		"ignoreUnknown": true,
+		"includes": [
+			// Named file types only: left to "**", Biome also rewrites Markdown and the YAML workflows.
+			"**/*.ts",
+			"**/*.js",
+			"**/*.mjs",
+			"**/*.cjs",
+			"**/*.svelte",
+			"**/*.astro",
+			"**/*.css",
+			"**/*.json",
+			"**/*.jsonc",
+			// The Solana contracts (Rust, with their own Anchor tests and pnpm lock file).
+			"!contracts",
+			// wasm-pack output: the JavaScript glue generated from the Rust games.
+			"!packages/chess",
+			"!packages/rustytac"
+		]
+	},
+	"formatter": { "enabled": true, "indentStyle": "tab", "lineWidth": 100 },
+	"javascript": {
+		"formatter": { "quoteStyle": "single", "trailingCommas": "none" },
+		"globals": ["Bun"]
+	},
+	"css": { "parser": { "tailwindDirectives": true } },
+	"html": {
+		// Biome reads the markup of .svelte and .astro files (experimental in 2.6), so the linter
+		// sees what the markup uses. It does not format them: in 2.6.4 its markup formatter added
+		// spaces between elements that had none, which changes the page (measured on 4 of 30 files).
+		"experimentalFullSupportEnabled": true,
+		"formatter": { "enabled": false }
+	},
+	"assist": { "enabled": true, "actions": { "source": { "organizeImports": "on" } } },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"complexity": {
+				"noExcessiveCognitiveComplexity": {
+					"level": "error",
+					"options": { "maxAllowedComplexity": 15 }
+				},
+				"noExcessiveLinesPerFunction": {
+					"level": "error",
+					"options": { "maxLines": 60, "skipBlankLines": true }
+				},
+				"useMaxParams": { "level": "error", "options": { "max": 4 } },
+				"noImplicitCoercions": "error",
+				// Its fix turns `a < b ? a : b` into Math.min(a, b) even when a and b are ISO date
+				// strings, which Math.min cannot compare (it broke four date ranges here).
+				"useMathMinMax": "off",
+				"noUselessUndefined": "error"
+			},
+			"correctness": {
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error",
+				"noUndeclaredVariables": "error"
+			},
+			"style": {
+				"noMagicNumbers": "error",
+				"noNestedTernary": "error",
+				"noNonNullAssertion": "error",
+				"noParameterAssign": "error",
+				"noUselessElse": "error",
+				"useConsistentTypeDefinitions": "error",
+				"useConst": "error",
+				"useExportType": "error",
+				"useImportType": "error",
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						// Object keys and type fields mirror database columns and bank API fields,
+						// which are snake_case, so any case is allowed there.
+						"conventions": [
+							// A constant may be CONSTANT_CASE wherever it is declared, and a
+							// namespace import keeps the library's own name (`import * as THREE`).
+							// Without these, Biome's safe fix renames them (START to Start).
+							{
+								"selector": { "kind": "const" },
+								"formats": ["camelCase", "PascalCase", "CONSTANT_CASE"]
+							},
+							{
+								"selector": { "kind": "importNamespace" },
+								"formats": ["camelCase", "PascalCase", "CONSTANT_CASE"]
+							},
+							{
+								"selector": { "kind": "objectLiteralMember" },
+								"formats": ["camelCase", "snake_case", "PascalCase", "CONSTANT_CASE"]
+							},
+							{
+								"selector": { "kind": "typeMember" },
+								"formats": ["camelCase", "snake_case", "PascalCase", "CONSTANT_CASE"]
+							}
+						]
+					}
+				},
+				"useTemplate": "error"
+			},
+			"suspicious": {
+				// `value == null` is the short way to ask "null or undefined", so it stays allowed.
+				"noDoubleEquals": { "level": "error", "options": { "ignoreNull": true } },
+				"noExplicitAny": "error",
+				"noShadow": "error",
+				"noTsIgnore": "error",
+				"noUnnecessaryConditions": "error",
+				"useAwait": "error"
+			},
+			// The rules below read the types. Biome still keeps them in its "nursery" group, which
+			// means their behavior may change between versions: the version is pinned exactly, and
+			// an upgrade is its own PR. Two gaps in 2.6.4 (tested 2026-11-17): they do not run inside
+			// the <script> of a .svelte file, and they do not see types from SvelteKit's own modules
+			// (`goto` from $app/navigation). svelte-check still type-checks both.
+			"nursery": {
+				"noBaseToString": "error",
+				"noFloatingPromises": "error",
+				"noMisusedPromises": "error",
+				"useAwaitThenable": "error",
+				"useExhaustiveSwitchCases": "error",
+				"useExplicitType": "error",
+				"useStrictBooleanExpressions": "error"
+			}
+		}
+	},
+	"overrides": [
+		{
+			// Tests state their inputs and expected values as plain numbers, group cases in long
+			// describe blocks, and assert on values they just set up.
+			"includes": ["**/*.test.ts"],
+			"linter": {
+				"rules": {
+					"style": { "noMagicNumbers": "off", "noNonNullAssertion": "off" },
+					"complexity": { "noExcessiveLinesPerFunction": "off" }
+				}
+			}
+		},
+		{
+			// Svelte 3: `$: name = ...` declares `name` without `let`, and Svelte orders reactive
+			// statements itself, so these two rules report declared names (as in schall).
+			// svelte-check still reports a name that is really undeclared.
+			"includes": ["**/*.svelte"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noUndeclaredVariables": "off",
+						"noInvalidUseBeforeDeclaration": "off"
+					}
+				}
+			}
+		}
+	]
+}

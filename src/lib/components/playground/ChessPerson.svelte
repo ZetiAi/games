@@ -1,34 +1,33 @@
 <script lang="ts">
 	import 'cm-chessboard/assets/styles/cm-chessboard.css';
-	import { onDestroy, onMount } from 'svelte';
 
-	import { goto } from '$app/navigation';
+	import { faHandshake } from '@fortawesome/free-regular-svg-icons';
+	import { onDestroy, onMount } from 'svelte';
 
 
 	import Icon from 'svelte-fa';
-
-	import { faHandshake } from '@fortawesome/free-regular-svg-icons';
+	import { goto } from '$app/navigation';
 
 	import ChessBoard from '$lib/components/playground/ChessBoard.svelte';
-	//import { user } from '$lib/stores/user';
-	import ChessEngine from '../../../routes/games/chess/chess_engine';
+	//import {
+	//	resetGame,
+	//	updateUserRecord
+	//} from '$lib/firebase/firestore/playground';
+	import {
+		acceptDraw,
+		declineDrawOffer,
+		offerDraw, 
+		resign,
+		saveGame
+	} from '$lib/firebase/util';
 	import { roomStatus } from '$lib/observables/chess';
 	import type {
 		DrawRequest,
 		GameRoom,
 		Players
 	} from '$lib/types/playground_interfaces';
-	//import {
-	//	resetGame,
-	//	updateUserRecord
-	//} from '$lib/firebase/firestore/playground';
-	import {
-		saveGame,
-		resign,
-		declineDrawOffer,
-		acceptDraw,
-		offerDraw
-	} from '$lib/firebase/util';
+	//import { user } from '$lib/stores/user';
+	import ChessEngine from '../../../routes/games/chess/chess_engine';
 
 	export let roomId = '';
 	export let chatRef;

@@ -1,0 +1,14 @@
+language js
+
+or {
+	JsIdentifierBinding() as $name,
+	TsIdentifierBinding() as $name
+} where {
+	$name <: r"^[A-Za-z]$",
+	not $name <: or { `i`, `j`, `a`, `b`, `x`, `y`, `_` },
+	register_diagnostic(
+		span = $name,
+		message = "One-letter name. Use a word that says what it holds (i, j, a, b, x, y are allowed).",
+		severity = "error"
+	)
+}

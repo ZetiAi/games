@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-// TODO figure out what is wrong with the types...
+// TODO(#12): figure out what is wrong with the types...
 import { onSnapshot } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import type {
-	DocumentReference,
 	DocumentData,
-	SnapshotListenOptions,
-	Query,
+	DocumentReference,
 	DocumentSnapshot,
-	QuerySnapshot
+	Query,
+	QuerySnapshot,
+	SnapshotListenOptions
 } from './interfaces';
 
 const DEFAULT_OPTIONS = { includeMetadataChanges: false };

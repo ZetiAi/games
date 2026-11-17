@@ -1,8 +1,4 @@
-import type {
-	DocumentReference,
-	FieldValue,
-	Timestamp
-} from 'firebase/firestore';
+import type { DocumentReference, FieldValue, Timestamp } from 'firebase/firestore';
 import type { State } from '$lib/types/chess';
 
 export interface PlayerRecord {

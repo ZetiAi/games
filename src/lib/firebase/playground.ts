@@ -1,29 +1,22 @@
-import type {
-	ChessGame,
-	GameInvitation,
-	GameRoom
-} from '$lib/types/playground_interfaces';
+import type { ChessGame, GameInvitation, GameRoom } from '$lib/types/playground_interfaces';
+
 //import { Firebase } from '$lib/firebase/init';
 
+import {
+	collection,
+	doc,
+	getDocs,
+	increment,
+	limit,
+	query,
+	serverTimestamp,
+	setDoc,
+	where
+} from 'firebase/firestore';
 //import { user } from '$lib/stores/user';
 import { get } from 'svelte/store';
 
-import {
-	serverTimestamp,
-	increment,
-	collection,
-	query,
-	doc,
-	setDoc,
-	where,
-	getDocs,
-	limit
-} from 'firebase/firestore';
-
-const newGameRoom = async (
-	gameType: string,
-	players: string[]
-): Promise<GameRoom> => {
+const newGameRoom = async (gameType: string, players: string[]): Promise<GameRoom> => {
 	let game: ChessGame;
 
 	if (gameType === 'chess') {
@@ -110,10 +103,7 @@ const newGameRoom = async (
 		}
 	};
 };
-const newInvitation = async (
-	to: string,
-	gameType: string
-): Promise<GameInvitation> => {
+const newInvitation = async (to: string, gameType: string): Promise<GameInvitation> => {
 	const $user = get(user);
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
@@ -142,10 +132,7 @@ const newInvitation = async (
 export const createGameRoom = async (invitation: GameInvitation) => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
-	const gameRoom: GameRoom = await newGameRoom(invitation.game, [
-		invitation.from,
-		invitation.to
-	]);
+	const gameRoom: GameRoom = await newGameRoom(invitation.game, [invitation.from, invitation.to]);
 	await acceptInvitation(invitation.id);
 	const gameRoomRef = doc(db, 'games');
 	gameRoom.id = gameRoomRef.id;
@@ -188,11 +175,7 @@ export const acceptInvitation = async (invitationId: string) => {
 	);
 };
 
-export const updateUserRecord = async (
-	recordType: string,
-	winner: string,
-	looser: string
-) => {
+export const updateUserRecord = async (recordType: string, winner: string, looser: string) => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
 
@@ -207,27 +190,11 @@ export const updateUserRecord = async (
 	const looserRef = looserSnapshot.docs[0].ref;
 
 	if (recordType === 'draw') {
-		await setDoc(
-			winnerRef,
-			{ gameRecord: { draws: increment(1) } },
-			{ merge: true }
-		);
-		await setDoc(
-			looserRef,
-			{ gameRecord: { draws: increment(1) } },
-			{ merge: true }
-		);
+		await setDoc(winnerRef, { gameRecord: { draws: increment(1) } }, { merge: true });
+		await setDoc(looserRef, { gameRecord: { draws: increment(1) } }, { merge: true });
 	} else {
 		console.log('RECORDTYPE NO ES DRAW');
-		await setDoc(
-			winnerRef,
-			{ gameRecord: { wins: increment(1) } },
-			{ merge: true }
-		);
-		await setDoc(
-			looserRef,
-			{ gameRecord: { losses: increment(1) } },
-			{ merge: true }
-		);
+		await setDoc(winnerRef, { gameRecord: { wins: increment(1) } }, { merge: true });
+		await setDoc(looserRef, { gameRecord: { losses: increment(1) } }, { merge: true });
 	}
 };

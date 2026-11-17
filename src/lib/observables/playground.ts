@@ -1,15 +1,13 @@
+import { collection, doc, orderBy, query, where } from 'firebase/firestore';
 import { map } from 'rxjs/operators';
 import { get } from 'svelte/store';
-
-import { collection, orderBy, query, doc, where } from 'firebase/firestore';
-
+// import { Firebase } from '$lib/firebase/init';
+import type { State } from '$lib/types/chess';
 // import { user } from '$lib/stores/user';
 import type { GameRoom } from '$lib/types/playground_interfaces';
 // import type { User } from '$lib/types/user_interfaces';
 import { collectionData } from './rxfire/collection';
 import { docData } from './rxfire/document';
-// import { Firebase } from '$lib/firebase/init';
-import type { State } from '$lib/types/chess';
 
 const transformToChessState = (gameRooms: GameRoom[]) => {
 	return gameRooms.map((room: GameRoom) => {
@@ -44,9 +42,7 @@ export const gamesStatus = () => {
 		orderBy('lastMove', 'desc')
 	);
 
-	return collectionData(q).pipe(
-		map((value: GameRoom[]) => transformToChessState(value))
-	);
+	return collectionData(q).pipe(map((value: GameRoom[]) => transformToChessState(value)));
 };
 
 export const playerRecord = () => {

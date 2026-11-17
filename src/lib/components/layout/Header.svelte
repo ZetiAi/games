@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import Icon from 'svelte-fa';
-	import logo from './svelte-logo.svg';
+	import {
+		faBan, 
+		faWallet
+	} from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
+	import Icon from 'svelte-fa';
+	import { page } from '$app/stores';
 	import { account } from '$lib/stores/PhantomAccount';
 	import {
 		goInstallPhantom,
@@ -10,10 +13,7 @@
 		phantomCon,
 		phantomDisconnect
 	} from '$lib/utils/phantomCalls';
-	import {
-		faWallet,
-		faBan
-	} from '@fortawesome/free-solid-svg-icons';
+	import logo from './svelte-logo.svg';
 
 	type PhantomExtensionStatus = 'checking' | 'isInstalled' | 'notInstalled';
 

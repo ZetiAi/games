@@ -1,0 +1,275 @@
+// Findings that were already in the code when the strict rules were switched on (2026-11-17):
+// 336 findings, listed as the files each rule does not cover yet. Burn-down: issue #11.
+//
+// This file may only shrink. To clean a file, delete its line under a rule, run the lint,
+// and fix what it reports. Never add a file here: new code passes as written.
+{
+	// The plugin rules (lint/*.grit) run on every file except the ones marked with "!".
+	"plugins": [
+		{
+			// no-deep-nesting: 1 findings in 1 files
+			"path": "./lint/no-deep-nesting.grit",
+			"includes": ["**", "!src/routes/games/chess/chess_engine.ts"]
+		},
+		{
+			// no-one-letter-names: 14 findings in 9 files
+			"path": "./lint/no-one-letter-names.grit",
+			"includes": [
+				"**",
+				"!src/lib/Counter.svelte",
+				"!src/lib/components/playground/Invitations.svelte",
+				"!src/lib/components/ui/Modal.svelte",
+				"!src/lib/firebase/playground.ts",
+				"!src/lib/form.ts",
+				"!src/lib/observables/invitations.ts",
+				"!src/lib/observables/playground.ts",
+				"!src/lib/services/ai.ts",
+				"!src/routes/games/chess/index.svelte"
+			]
+		}
+	],
+	// The built-in rules, each switched off for the files listed under it.
+	"overrides": [
+		{
+			// useExplicitType: 81 findings in 18 files
+			"linter": { "rules": { "nursery": { "useExplicitType": "off" } } },
+			"includes": [
+				"src/hooks.ts",
+				"src/lib/Counter.svelte",
+				"src/lib/components/layout/Header.svelte",
+				"src/lib/components/playground/ChessBoard.svelte",
+				"src/lib/components/playground/ChessPerson.svelte",
+				"src/lib/components/playground/ChessRandom.svelte",
+				"src/lib/components/playground/Invitations.svelte",
+				"src/lib/components/playground/Turns.svelte",
+				"src/lib/firebase/playground.ts",
+				"src/lib/firebase/util.ts",
+				"src/lib/form.ts",
+				"src/lib/observables/chat.ts",
+				"src/lib/observables/chess.ts",
+				"src/lib/observables/invitations.ts",
+				"src/lib/observables/playground.ts",
+				"src/routes/games/chess/chess_engine.ts",
+				"src/routes/games/chess/index.svelte",
+				"src/routes/portal.svelte"
+			]
+		},
+		{
+			// noMagicNumbers: 78 findings in 5 files
+			"linter": { "rules": { "style": { "noMagicNumbers": "off" } } },
+			"includes": [
+				"src/lib/Counter.svelte",
+				"src/lib/firebase/playground.ts",
+				"src/routes/games/chess/chess_engine.ts",
+				"src/routes/games/chess/index.svelte",
+				"src/routes/games/gato/index.svelte"
+			]
+		},
+		{
+			// useNamingConvention: 34 findings in 12 files
+			"linter": { "rules": { "style": { "useNamingConvention": "off" } } },
+			"includes": [
+				"src/lib/Counter.svelte",
+				"src/lib/firebase/playground.ts",
+				"src/lib/firebase/util.ts",
+				"src/lib/form.ts",
+				"src/lib/observables/chess.ts",
+				"src/lib/observables/invitations.ts",
+				"src/lib/observables/playground.ts",
+				"src/lib/types/chess.ts",
+				"src/lib/utils/phantomCalls.ts",
+				"src/routes/games/__layout.svelte",
+				"src/routes/games/chess/\\[room\\].svelte",
+				"src/routes/games/chess/index.svelte"
+			]
+		},
+		{
+			// noUndeclaredVariables: 24 findings in 6 files
+			"linter": { "rules": { "correctness": { "noUndeclaredVariables": "off" } } },
+			"includes": [
+				"src/lib/firebase/playground.ts",
+				"src/lib/firebase/util.ts",
+				"src/lib/observables/chat.ts",
+				"src/lib/observables/chess.ts",
+				"src/lib/observables/invitations.ts",
+				"src/lib/observables/playground.ts"
+			]
+		},
+		{
+			// useButtonType: 21 findings in 8 files
+			"linter": { "rules": { "a11y": { "useButtonType": "off" } } },
+			"includes": [
+				"src/lib/Counter.svelte",
+				"src/lib/components/layout/Header.svelte",
+				"src/lib/components/playground/ChessBoard.svelte",
+				"src/lib/components/playground/ChessPerson.svelte",
+				"src/lib/components/playground/Invitations.svelte",
+				"src/routes/games/chess/index.svelte",
+				"src/routes/games/gato/index.svelte",
+				"src/routes/portal.svelte"
+			]
+		},
+		{
+			// noImplicitAnyLet: 15 findings in 5 files
+			"linter": { "rules": { "suspicious": { "noImplicitAnyLet": "off" } } },
+			"includes": [
+				"src/lib/components/playground/ChessBoard.svelte",
+				"src/lib/components/playground/ChessPerson.svelte",
+				"src/lib/components/playground/ChessRandom.svelte",
+				"src/lib/components/playground/Invitations.svelte",
+				"src/lib/components/playground/Turns.svelte"
+			]
+		},
+		{
+			// noDoubleEquals: 9 findings in 2 files
+			"linter": { "rules": { "suspicious": { "noDoubleEquals": "off" } } },
+			"includes": ["src/lib/components/layout/Header.svelte", "src/routes/portal.svelte"]
+		},
+		{
+			// noExplicitAny: 9 findings in 6 files
+			"linter": { "rules": { "suspicious": { "noExplicitAny": "off" } } },
+			"includes": [
+				"src/lib/components/playground/ChessPerson.svelte",
+				"src/lib/observables/rxfire/document.ts",
+				"src/lib/observables/rxfire/fromRef.ts",
+				"src/lib/services/ai.ts",
+				"src/lib/types/types.ts",
+				"src/routes/games/chess/chess_engine.ts"
+			]
+		},
+		{
+			// noImportantStyles: 6 findings in 1 files
+			"linter": { "rules": { "complexity": { "noImportantStyles": "off" } } },
+			"includes": ["src/routes/games/gato/index.svelte"]
+		},
+		{
+			// noUselessElse: 6 findings in 4 files
+			"linter": { "rules": { "style": { "noUselessElse": "off" } } },
+			"includes": [
+				"src/lib/components/layout/Header.svelte",
+				"src/lib/components/playground/ChessPerson.svelte",
+				"src/lib/firebase/playground.ts",
+				"src/routes/portal.svelte"
+			]
+		},
+		{
+			// noUnusedImports: 5 findings in 2 files
+			"linter": { "rules": { "correctness": { "noUnusedImports": "off" } } },
+			"includes": ["src/lib/firebase/util.ts", "src/lib/observables/chat.ts"]
+		},
+		{
+			// noUnusedVariables: 4 findings in 3 files
+			"linter": { "rules": { "correctness": { "noUnusedVariables": "off" } } },
+			"includes": [
+				"src/lib/components/playground/ChessRandom.svelte",
+				"src/lib/components/playground/Turns.svelte",
+				"src/lib/utils/phantomCalls.ts"
+			]
+		},
+		{
+			// useTemplate: 4 findings in 2 files
+			"linter": { "rules": { "style": { "useTemplate": "off" } } },
+			"includes": ["src/lib/components/ui/Spinner.svelte", "src/lib/services/ai.ts"]
+		},
+		{
+			// noShadow: 3 findings in 3 files
+			"linter": { "rules": { "suspicious": { "noShadow": "off" } } },
+			"includes": [
+				"src/lib/components/playground/ChessBoard.svelte",
+				"src/lib/form.ts",
+				"src/routes/games/gato/index.svelte"
+			]
+		},
+		{
+			// useNodejsImportProtocol: 2 findings in 1 files
+			"linter": { "rules": { "style": { "useNodejsImportProtocol": "off" } } },
+			"includes": ["packages/copyWasm.cjs"]
+		},
+		{
+			// useLiteralKeys: 2 findings in 1 files
+			"linter": { "rules": { "complexity": { "useLiteralKeys": "off" } } },
+			"includes": ["src/hooks.ts"]
+		},
+		{
+			// useParseIntRadix: 2 findings in 2 files
+			"linter": { "rules": { "correctness": { "useParseIntRadix": "off" } } },
+			"includes": [
+				"src/lib/components/playground/ChessRandom.svelte",
+				"src/routes/games/chess/chess_engine.ts"
+			]
+		},
+		{
+			// noDescendingSpecificity: 2 findings in 2 files
+			"linter": { "rules": { "style": { "noDescendingSpecificity": "off" } } },
+			"includes": [
+				"src/lib/components/layout/Header.svelte",
+				"src/lib/components/playground/Turns.svelte"
+			]
+		},
+		{
+			// noExcessiveCognitiveComplexity: 2 findings in 2 files
+			"linter": { "rules": { "complexity": { "noExcessiveCognitiveComplexity": "off" } } },
+			"includes": ["src/lib/form.ts", "src/routes/games/gato/index.svelte"]
+		},
+		{
+			// useOptionalChain: 1 findings in 1 files
+			"linter": { "rules": { "complexity": { "useOptionalChain": "off" } } },
+			"includes": ["src/lib/utils/phantomCalls.ts"]
+		},
+		{
+			// noShorthandPropertyOverrides: 1 findings in 1 files
+			"linter": { "rules": { "suspicious": { "noShorthandPropertyOverrides": "off" } } },
+			"includes": ["src/app.css"]
+		},
+		{
+			// noSvgWithoutTitle: 1 findings in 1 files
+			"linter": { "rules": { "a11y": { "noSvgWithoutTitle": "off" } } },
+			"includes": ["src/lib/components/ui/SpanError.svelte"]
+		},
+		{
+			// noExcessiveLinesPerFunction: 1 findings in 1 files
+			"linter": { "rules": { "complexity": { "noExcessiveLinesPerFunction": "off" } } },
+			"includes": ["src/lib/firebase/playground.ts"]
+		},
+		{
+			// noAssignInExpressions: 1 findings in 1 files
+			"linter": { "rules": { "suspicious": { "noAssignInExpressions": "off" } } },
+			"includes": ["src/lib/form.ts"]
+		},
+		{
+			// useStrictBooleanExpressions: 1 findings in 1 files
+			"linter": { "rules": { "nursery": { "useStrictBooleanExpressions": "off" } } },
+			"includes": ["src/lib/observables/rxfire/document.ts"]
+		},
+		{
+			// noVoidTypeReturn: 1 findings in 1 files
+			"linter": { "rules": { "correctness": { "noVoidTypeReturn": "off" } } },
+			"includes": ["src/lib/utils/phantomCalls.ts"]
+		},
+		{
+			// useAwait: 1 findings in 1 files
+			"linter": { "rules": { "suspicious": { "useAwait": "off" } } },
+			"includes": ["src/routes/games/__layout.svelte"]
+		},
+		{
+			// noLabelWithoutControl: 1 findings in 1 files
+			"linter": { "rules": { "a11y": { "noLabelWithoutControl": "off" } } },
+			"includes": ["src/routes/games/gato/index.svelte"]
+		},
+		{
+			// noDuplicateProperties: 1 findings in 1 files
+			"linter": { "rules": { "suspicious": { "noDuplicateProperties": "off" } } },
+			"includes": ["src/routes/games/gato/index.svelte"]
+		},
+		{
+			// noDuplicateSelectorsKeyframeBlock: 1 findings in 1 files
+			"linter": { "rules": { "suspicious": { "noDuplicateSelectorsKeyframeBlock": "off" } } },
+			"includes": ["src/routes/portal.svelte"]
+		},
+		{
+			// useGenericFontNames: 1 findings in 1 files
+			"linter": { "rules": { "a11y": { "useGenericFontNames": "off" } } },
+			"includes": ["src/routes/portal.svelte"]
+		}
+	]
+}
