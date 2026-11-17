@@ -1,11 +1,9 @@
-import { map } from 'rxjs/operators';
-
 import { doc } from 'firebase/firestore';
-
+import { map } from 'rxjs/operators';
+import type { State } from '$lib/types/chess';
 //import { Firebase } from '$lib/firebase/init';
 import type { GameRoom } from '$lib/types/playground_interfaces';
 import { docData } from './rxfire/document';
-import type { State } from '$lib/types/chess';
 
 const transformToChessState = (room: GameRoom) => {
 	if (!room.game) return;
@@ -27,7 +25,5 @@ export const roomStatus = (roomId: string) => {
 
 	const roomRef = doc(db, `games/${roomId}`);
 
-	return docData(roomRef).pipe(
-		map((room: GameRoom) => transformToChessState(room))
-	);
+	return docData(roomRef).pipe(map((room: GameRoom) => transformToChessState(room)));
 };

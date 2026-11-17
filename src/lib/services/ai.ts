@@ -1,7 +1,4 @@
-export const playTicTacToe = async (
-	firstPlayer: string,
-	board: string[][]
-): Promise<any> => {
+export const playTicTacToe = async (firstPlayer: string, board: string[][]): Promise<any> => {
 	try {
 		const body = JSON.stringify({
 			game: 'tictactoe',

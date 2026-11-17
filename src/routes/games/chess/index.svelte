@@ -8,6 +8,7 @@
 	import ChessRandom from '$lib/components/playground/ChessRandom.svelte';
 	import SpanError from '$lib/components/ui/SpanError.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
+
 	//import { createInvitation } from '$lib/firebase/firestore/playground';
 
 	let friendEmail = '';

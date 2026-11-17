@@ -1,9 +1,9 @@
 <script lang="ts">
 	import {
+		BORDER_TYPE, 
 		Chessboard,
-		MARKER_TYPE,
 		INPUT_EVENT_TYPE,
-		BORDER_TYPE
+		MARKER_TYPE
 	} from 'cm-chessboard/src/cm-chessboard/Chessboard';
 	import 'cm-chessboard/assets/styles/cm-chessboard.css';
 
@@ -21,8 +21,8 @@
 	export let lastSquare = '';
 	export let kingMarker = '';
 	export let secondMove;
-	export let inputHandler = null; // TODO: Set proper default
-	export let callbackWinner = null; // TODO: Set proper default
+	export let inputHandler = null; // TODO(#12): Set proper default
+	export let callbackWinner = null; // TODO(#12): Set proper default
 
 	let states: State[] = [];
 

@@ -3,19 +3,16 @@
 //import { Firebase } from '$lib/firebase/init';
 // import type { User } from '$lib/types/user_interfaces';
 import {
-	serverTimestamp,
 	collection,
-	doc,
-	setDoc,
 	deleteDoc,
-	writeBatch,
-	Timestamp
+	doc,
+	serverTimestamp,
+	setDoc,
+	Timestamp,
+	writeBatch
 } from 'firebase/firestore';
 
-
-export const deleteInvitation = async (
-	invitationId: string
-): Promise<boolean> => {
+export const deleteInvitation = async (invitationId: string): Promise<boolean> => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
 
@@ -32,9 +29,8 @@ export const deleteInvitation = async (
 	}
 };
 
-
 export const saveGame = async (gameState): Promise<boolean> => {
-	// TODO: gameState Type
+	// TODO(#12): gameState Type
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
 
@@ -72,10 +68,7 @@ export const finishGame = async (gameid: string): Promise<boolean> => {
 	}
 };
 
-export const resign = async (
-	gameId: string,
-	opponentColor: string
-): Promise<boolean> => {
+export const resign = async (gameId: string, opponentColor: string): Promise<boolean> => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
 
@@ -113,10 +106,7 @@ export const declineDrawOffer = async (gameId: string): Promise<boolean> => {
 	}
 };
 
-export const offerDraw = async (
-	gameId: string,
-	from: string
-): Promise<boolean> => {
+export const offerDraw = async (gameId: string, from: string): Promise<boolean> => {
 	const _firebase = Firebase.getInstance();
 	const db = _firebase.getFirestore();
 
@@ -142,11 +132,7 @@ export const acceptDraw = async (gameId: string): Promise<boolean> => {
 
 	try {
 		const gameRef = doc(db, `games/${gameId}`);
-		await setDoc(
-			gameRef,
-			{ active: false, draw: true, drawRequest: {} },
-			{ merge: true }
-		);
+		await setDoc(gameRef, { active: false, draw: true, drawRequest: {} }, { merge: true });
 
 		return true;
 	} catch (err) {

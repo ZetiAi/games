@@ -1,6 +1,6 @@
 <script>
-	import Icon from 'svelte-fa';
 	import { faChess } from '@fortawesome/free-solid-svg-icons';
+	import Icon from 'svelte-fa';
 
 
 	export let userPhotoURL = '';

@@ -3,10 +3,7 @@ const fs = require('fs');
 
 const buildDir = 'static';
 
-const copyWasmFiles = (
-	startPath = path.resolve(__dirname),
-	extension = 'wasm'
-) => {
+const copyWasmFiles = (startPath = path.resolve(__dirname), extension = 'wasm') => {
 	if (!fs.existsSync(startPath)) {
 		console.log('no dir ', startPath);
 		return;

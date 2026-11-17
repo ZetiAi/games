@@ -3,15 +3,11 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	import Icon from 'svelte-fa';
-
-
-	import type { GameInvitation } from '$lib/types/playground_interfaces';
-	import { invitationStatus } from '$lib/observables/invitations';
-
-	import { createGameRoom } from '$lib/firebase/playground';
-
 	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import { createGameRoom } from '$lib/firebase/playground';
 	import { deleteInvitation } from '$lib/firebase/util';
+	import { invitationStatus } from '$lib/observables/invitations';
+	import type { GameInvitation } from '$lib/types/playground_interfaces';
 
 	let invitationObservable;
 	let invitations: GameInvitation[] = [];

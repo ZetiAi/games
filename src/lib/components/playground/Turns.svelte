@@ -10,8 +10,8 @@
 	//import { user } from '$lib/stores/user';
 
 
-	import UserCard from './UserCard.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import UserCard from './UserCard.svelte';
 
 	let rooms: GameRoom[] = [];
 	let playerColor = '';

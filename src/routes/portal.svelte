@@ -1,13 +1,13 @@
 <script lang="ts">
+	import { faHandPeace } from '@fortawesome/free-regular-svg-icons';
 	import { onMount } from 'svelte';
+	import Modal from '$lib/components/ui/Modal.svelte';
+	import { account } from '$lib/stores/PhantomAccount';
 	import {
 		goInstallPhantom,
 		isPhantomInstalled,
 		phantomCon
 	} from '$lib/utils/phantomCalls';
-	import { account } from '$lib/stores/PhantomAccount';
-	import Modal from '$lib/components/ui/Modal.svelte';
-	import { faHandPeace } from '@fortawesome/free-regular-svg-icons';
 
 	type PhantomExtensionStatus = 'checking' | 'isInstalled' | 'notInstalled';
 

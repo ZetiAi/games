@@ -1,12 +1,12 @@
 <script>
 
-	import Icon from 'svelte-fa';
-	import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 	import { faCircle } from '@fortawesome/free-regular-svg-icons';
-	import { onMount } from 'svelte';
-
+	import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 	//import { darkMode } from '$lib/stores/storeDark';
 	import init, { TicTacToe } from 'rustytac';
+	import { onMount } from 'svelte';
+	import Icon from 'svelte-fa';
+
 	///import { playTicTacToe } from '$lib/services/';
 
 	let tictactoe;

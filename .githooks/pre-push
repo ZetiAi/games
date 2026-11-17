@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Refuses a push whose code is not formatted or breaks a lint rule: Biome (format and
+# lint, warnings are errors) and the TODO(#123) check, in seconds. Never the tests, and
+# never rewrites files: it fails, and `bun run format` fixes the formatting.
+# svelte-check is not here yet: it reports errors on master today (issue #11).
+#
+# One-time setup per clone (`bun install` does it through the `prepare` script):
+#
+#     git config core.hooksPath .githooks
+
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+if ! bun run lint </dev/null; then
+	echo ''
+	echo "Lint failed. 'bun run format' applies the formatting and safe fixes; fix the rest by hand." >&2
+	exit 1
+fi

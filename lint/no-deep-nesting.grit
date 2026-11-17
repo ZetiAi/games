@@ -1,0 +1,9 @@
+language js
+
+JsBlockStatement(statements = contains JsBlockStatement(statements = contains JsBlockStatement(statements = contains JsBlockStatement() as $fourth))) where {
+	register_diagnostic(
+		span = $fourth,
+		message = "Nested more than 3 levels deep. Return early or move the inner part into a named function.",
+		severity = "error"
+	)
+}
