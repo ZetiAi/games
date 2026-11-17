@@ -1,6 +1,6 @@
-// The one formatter and linter for every TypeScript, Svelte, Astro, JSON and CSS file in this repo.
-// It is the suite's standard setup (~/Projects/code-style.md): copy this file, and never add a
-// second tool next to it. Every rule is an error, so `biome ci` either passes or blocks the PR.
+// The one formatter and linter for every TypeScript, JavaScript, Svelte, JSON and CSS file in this
+// repo. Never add a second tool next to it. Every rule is an error, so `biome ci` either passes or
+// blocks the push.
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	// What the older code has not been brought up to yet. That file may only shrink. It also
@@ -58,9 +58,11 @@
 				"useMaxParams": { "level": "error", "options": { "max": 4 } },
 				"noImplicitCoercions": "error",
 				// Its fix turns `a < b ? a : b` into Math.min(a, b) even when a and b are ISO date
-				// strings, which Math.min cannot compare (it broke four date ranges here).
+				// strings, which Math.min cannot compare.
 				"useMathMinMax": "off",
-				"noUselessUndefined": "error"
+				// Reported, never fixed automatically: in a Svelte `$props()` list, removing
+				// `= undefined` changes what Svelte compiles.
+				"noUselessUndefined": { "level": "error", "fix": "none" }
 			},
 			"correctness": {
 				"noUnusedImports": "error",
@@ -79,10 +81,14 @@
 				"useImportType": "error",
 				"useNamingConvention": {
 					"level": "error",
+					// Reported, never fixed automatically: Biome calls its rename a safe fix, but here
+					// it renamed `_firebase` to `Firebase` (hiding the import it calls) and a Svelte
+					// store, which changes behavior.
+					"fix": "none",
 					"options": {
 						"strictCase": false,
-						// Object keys and type fields mirror database columns and bank API fields,
-						// which are snake_case, so any case is allowed there.
+						// Object keys and type fields often mirror stored documents and outside
+						// APIs, which may be snake_case, so any case is allowed there.
 						"conventions": [
 							// A constant may be CONSTANT_CASE wherever it is declared, and a
 							// namespace import keeps the library's own name (`import * as THREE`).
@@ -147,7 +153,7 @@
 		},
 		{
 			// Svelte 3: `$: name = ...` declares `name` without `let`, and Svelte orders reactive
-			// statements itself, so these two rules report declared names (as in schall).
+			// statements itself, so these two rules report names that are declared.
 			// svelte-check still reports a name that is really undeclared.
 			"includes": ["**/*.svelte"],
 			"linter": {

@@ -24,7 +24,7 @@ bun run build
   --error-on-warnings .` over every TypeScript, JavaScript, Svelte, JSON and CSS file, then
   `scripts/check-todos.sh` (every `TODO` or `FIXME` is written `TODO(#123)` with its issue). There
   is no ESLint and no Prettier: do not add them.
-- The setup is the suite's standard (`~/Projects/code-style.md`): `biome.jsonc` (tabs, single
+- The setup: `biome.jsonc`, Biome 2.6.4 pinned exactly (tabs, single
   quotes, 100 columns, no trailing commas; the strict rules as errors: unhandled promises, nullable
   conditions, missing switch cases, written types, no unexplained numbers, no `any`, small flat
   functions) and two plugin rules in `lint/` (no one-letter names except `i j a b x y`, nothing
