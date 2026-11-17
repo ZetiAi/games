@@ -29,7 +29,7 @@ import type {
 
 const DEFAULT_OPTIONS = { includeMetadataChanges: false };
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-start lint/suspicious/noExplicitAny: copied from rxfire (Google, Apache-2.0), which types its snapshot helpers with any.
 export function fromRef<T = DocumentData>(
 	ref: DocumentReference<T>,
 	options?: SnapshotListenOptions
@@ -42,7 +42,7 @@ export function fromRef(
 	ref: any,
 	options: SnapshotListenOptions = DEFAULT_OPTIONS
 ): Observable<any> {
-	/* eslint-enable @typescript-eslint/no-explicit-any */
+	// biome-ignore-end lint/suspicious/noExplicitAny: end of the rxfire snapshot helpers.
 	return new Observable((subscriber) => {
 		const unsubscribe = onSnapshot(ref, options, {
 			next: subscriber.next.bind(subscriber),

@@ -29,7 +29,7 @@ bun run build
   conditions, missing switch cases, written types, no unexplained numbers, no `any`, small flat
   functions) and two plugin rules in `lint/` (no one-letter names except `i j a b x y`, nothing
   nested deeper than 3). New code passes as written.
-- `biome-baseline.jsonc` lists, per rule, the files that had findings on 2026-11-17 (336). It only
+- `biome-baseline.jsonc` lists, per rule, the files that had findings on 2026-11-17 (332). It only
   shrinks: delete a file's line, run `bun run lint`, fix what it reports. Never add a file to it.
   Burn-down: issue #11. TODOs that had no issue: #12.
 - Left out of Biome: `contracts/` and the generated wasm glue in `packages/chess` and

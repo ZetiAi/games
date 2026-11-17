@@ -1,5 +1,5 @@
 // Findings that were already in the code when the strict rules were switched on (2026-11-17):
-// 336 findings, listed as the files each rule does not cover yet. Burn-down: issue #11.
+// 332 findings, listed as the files each rule does not cover yet. Burn-down: issue #11.
 //
 // This file may only shrink. To clean a file, delete its line under a rule, run the lint,
 // and fix what it reports. Never add a file here: new code passes as written.
@@ -126,12 +126,11 @@
 			"includes": ["src/lib/components/layout/Header.svelte", "src/routes/portal.svelte"]
 		},
 		{
-			// noExplicitAny: 9 findings in 6 files
+			// noExplicitAny: 5 findings in 5 files
 			"linter": { "rules": { "suspicious": { "noExplicitAny": "off" } } },
 			"includes": [
 				"src/lib/components/playground/ChessPerson.svelte",
 				"src/lib/observables/rxfire/document.ts",
-				"src/lib/observables/rxfire/fromRef.ts",
 				"src/lib/services/ai.ts",
 				"src/lib/types/types.ts",
 				"src/routes/games/chess/chess_engine.ts"
